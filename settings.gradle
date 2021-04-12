@@ -1,0 +1,8 @@
+rootProject.name = 'ecomm-order-app'
+
+include 'ecomm-foundation-lib'
+include 'ecomm-payment-service'
+include 'ecomm-order-service'
+include 'ecomm-customer-service'
+include 'ecomm-item-service'
+

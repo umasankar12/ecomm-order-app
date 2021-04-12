@@ -1,0 +1,19 @@
+dependencies {
+    implementation project(":ecomm-foundation-lib")
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'javax.inject:javax.inject-tck:1'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClass = 'org.ecomm.paymentservice.EcommPaymentServiceApplication'
+}

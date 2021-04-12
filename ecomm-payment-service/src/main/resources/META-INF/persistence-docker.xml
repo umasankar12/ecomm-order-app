@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+    <persistence-unit name="payment-service-pu" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>org.ecomm.foundation.model.Address</class>
+        <class>org.ecomm.foundation.model.Customer</class>
+        <class>org.ecomm.foundation.model.CustomerPayment</class>
+        <class>org.ecomm.foundation.model.GuestCustomer</class>
+        <class>org.ecomm.foundation.model.Item</class>
+        <class>org.ecomm.foundation.model.Order</class>
+        <class>org.ecomm.foundation.model.OrderHistory</class>
+        <class>org.ecomm.foundation.model.OrderItem</class>
+        <class>org.ecomm.foundation.model.OrderPayment</class>
+        <class>org.ecomm.foundation.model.Payment</class>
+        <class>org.ecomm.foundation.model.PaymentHistory</class>
+        <properties>
+            <property name="packagesToScan" value="org.ecomm.foundation.model" />
+            <!--           <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ecomm?stringtype=unspecified"/>-->
+
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:postgresql://postgres:5432/ecomm?stringtype=unspecified"/>
+            <property name="javax.persistence.jdbc.user" value="postgres"/>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.password" value="hello"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgresPlusDialect"/>
+
+        </properties>
+    </persistence-unit>
+</persistence>
