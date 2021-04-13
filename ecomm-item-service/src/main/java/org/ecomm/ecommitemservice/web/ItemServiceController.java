@@ -1,27 +1,93 @@
 package org.ecomm.ecommitemservice.web;
 
-import org.ecomm.ecommitemservice.service.CreateItemService;
+import org.ecomm.ecommitemservice.dto.ItemPayload;
+import org.ecomm.ecommitemservice.service.ItemService;
+import org.ecomm.foundation.api.AppLogger;
+import org.ecomm.foundation.api.AppRequest;
+import org.ecomm.foundation.api.AppResponse;
 import org.ecomm.foundation.model.Item;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class ItemServiceController {
-    Logger logger = LoggerFactory.getLogger(ItemServiceController.class);
 
-    @Autowired
-    private CreateItemService createItemService;
+    @AppLogger
+    Logger logger;
 
-    @GetMapping("/item/{itemId}")
-    public Item getItem(@PathVariable("itemId") String itemId){
-        logger.info("Item id is "+ itemId);
-        return createItemService.findItemByItemCode(itemId);
+    private ItemService itemService;
+
+    @Inject
+    public ItemServiceController(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
+    @GetMapping("/item/{itemCode}")
+    public @ResponseBody
+    ResponseEntity<Item> getItem(@PathVariable("itemCode") String itemCode) {
+        AppRequest<Item> itemRequest = new AppRequest<>(new Item());
+        try {
+            assert (itemCode != null);
+            logger.info("Going to find items for {}", itemCode);
+            Item item = itemService.findItemByItemCode(itemCode);
+            ResponseEntity<Item> responseEntity =
+                    new ResponseEntity<>(item, HttpStatus.OK);
+            return responseEntity;
+        } catch (Exception ex) {
+            return new ResponseEntity<Item>(new Item(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/addItem")
-    public Item addItem(@RequestBody Item item){
-        return createItemService.saveItem(item);
+    public ResponseEntity<Item> addItem(@RequestBody ItemPayload itemPayload) {
+
+        AppRequest<Item> addItemRequest = new AppRequest<>(new Item());
+        try {
+            logger.info("adding a new Item orders ");
+            Item item = itemService.saveItem(itemPayload);
+            ResponseEntity<Item> responseEntity =
+                    new ResponseEntity<>(item, HttpStatus.OK);
+            return responseEntity;
+        } catch (Exception ex) {
+            return new ResponseEntity<Item>(new Item(), HttpStatus.NOT_FOUND);
+        }
+
     }
+
+    @PostMapping("/allItems")
+    public ResponseEntity<List<Item>> findAllItemsById(@RequestBody List<Integer> ids) {
+        try {
+            logger.info("retrieving items for set of item codes ");
+            List<Item> items = itemService.getItemRepository().findAllById(ids);
+            ResponseEntity<List<Item>> responseEntity =
+                    new ResponseEntity<>(items, HttpStatus.OK);
+            return responseEntity;
+        } catch (Exception ex) {
+            return new ResponseEntity<List<Item>>
+                    (new ArrayList<Item>(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @PostMapping("/allItemsByCode")
+    public ResponseEntity<List<Item>> findAllItemsByCode(@RequestBody List<String> codes) {
+        try {
+            logger.info("retrieving items for set of item codes ");
+            List<Item> items = itemService.getItemRepository().findAllByCode(codes);
+            ResponseEntity<List<Item>> responseEntity =
+                    new ResponseEntity<>(items, HttpStatus.OK);
+            return responseEntity;
+        } catch (Exception ex) {
+            return new ResponseEntity<List<Item>>
+                    (new ArrayList<Item>(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
 }

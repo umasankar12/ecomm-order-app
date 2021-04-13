@@ -21,41 +21,41 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-@Configuration
-@ComponentScan
-@EnableWebMvc
-@EnableJpaRepositories(basePackages = {"org.ecomm.foundation.repo"})
-@EntityScan(basePackages = {"org.ecomm.foundation.model"})
-@EnableAutoConfiguration
+//@Configuration
+//@ComponentScan
+//@EnableWebMvc
+//@EnableJpaRepositories(basePackages = {"org.ecomm.foundation.repo"})
+//@EntityScan(basePackages = {"org.ecomm.foundation.model"})
+//@EnableAutoConfiguration
 public class EcommCustomerServiceConfig {
 
-    @Value("${app.jpa.persistenceXml}")
-    private String persistenceXml;
-
-    @Bean
-    public String persistenceXmlLocation() {
-        return persistenceXml;
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        var emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setPersistenceXmlLocation(persistenceXmlLocation());
-        emf.setPersistenceUnitName("payment-service-pu");
-        //emf.setDataSource(dataSource());
-        return emf;
-    }
-
+//    @Value("${app.jpa.persistenceXml}")
+//    private String persistenceXml;
+//
 //    @Bean
-//    public DataSource dataSource() {
-//        return DataSourceBuilder.create().build();
+//    public String persistenceXmlLocation() {
+//        return persistenceXml;
 //    }
-
-    @Bean
-    public TransactionManager transactionManager(EntityManagerFactory emf) {
-        return new JpaTransactionManager(emf);
-    }
-
+//
+//    @Bean
+//    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+//        var emf = new LocalContainerEntityManagerFactoryBean();
+//        emf.setPersistenceXmlLocation(persistenceXmlLocation());
+//        emf.setPersistenceUnitName("payment-service-pu");
+//        //emf.setDataSource(dataSource());
+//        return emf;
+//    }
+//
+////    @Bean
+////    public DataSource dataSource() {
+////        return DataSourceBuilder.create().build();
+////    }
+//
+//    @Bean
+//    public TransactionManager transactionManager(EntityManagerFactory emf) {
+//        return new JpaTransactionManager(emf);
+//    }
+//
 
 }
 

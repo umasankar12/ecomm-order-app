@@ -1,25 +1,24 @@
 package org.ecomm.foundation.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.util.Objects;
 
 @NoArgsConstructor
-@Getter
-@Setter
 @EqualsAndHashCode
+@ToString
 @Entity
-@Table(schema = "inventory")
-public class Item {
+@Table(schema = "inventory",name="item")
+public class Item{
 
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(generator="inventory.item_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "inventory.item_id_seq", sequenceName = "inventory.item_id_seq", allocationSize = 1)
     private int id;
     @Basic
     @Column(name = "code", nullable = false, length = 20)
@@ -43,4 +42,93 @@ public class Item {
     @Column(name = "end_date")
     private Date endDate;
 
+    public int getId() {
+        return id;
+    }
+
+    public Item setId(int id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public Item setCode(String code) {
+        this.code = code;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Item setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Item setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public Item setUnit(String unit) {
+        this.unit = unit;
+        return this;
+    }
+
+    public BigInteger getUnitPrice() {
+        return unitPrice;
+    }
+
+    public Item setUnitPrice(BigInteger unitPrice) {
+        this.unitPrice = unitPrice;
+        return this;
+    }
+
+    public BigInteger getAvailQty() {
+        return availQty;
+    }
+
+    public Item setAvailQty(BigInteger availQty) {
+        this.availQty = availQty;
+        return this;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public Item setTags(String tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Item setStartDate(Date startDate) {
+        this.startDate = startDate;
+        return this;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public Item setEndDate(Date endDate) {
+        this.endDate = endDate;
+        return this;
+    }
 }

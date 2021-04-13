@@ -21,11 +21,12 @@
            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ecomm?stringtype=unspecified"/>
 
 <!--            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres:5432/ecomm"/>-->
-            <property name="javax.persistence.jdbc.user" value="juddu"/>
+            <property name="javax.persistence.jdbc.user" value="postgres"/>
 
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.password" value="hello"/>
+<!--            <property name="javax.persistence.jdbc.password" value="hello"/>-->
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgresPlusDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
 
         </properties>
     </persistence-unit>
