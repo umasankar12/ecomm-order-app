@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppResponse<T> {
-    List<T> model = new ArrayList<>();
+    List<T> models = new ArrayList<>();
     AppRequest<T> request;
     boolean success;
     int status;
@@ -14,11 +14,11 @@ public class AppResponse<T> {
     }
 
     public AppResponse(T model) {
-        this.model.add(model);
+        this.models.add(model);
     }
 
     public AppResponse(List<T> models) {
-        this.model = models;
+        this.models = models;
     }
 
     public AppRequest<T> getRequest() {

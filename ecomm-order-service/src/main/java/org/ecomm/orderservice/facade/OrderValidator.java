@@ -16,4 +16,6 @@ public interface OrderValidator {
 
     boolean validateOrderQuantity(List<OrderItem> orderItems) throws Exception;
 
+    Double calcOrderTotal(Order order);
+
 }

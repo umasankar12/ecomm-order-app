@@ -1,0 +1,13 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    implementation project(":ecomm-foundation-lib")
+    implementation "org.springframework.boot:spring-boot-starter:2.4.4"
+}
+
+
+application {
+    mainClass = 'org.ecomm.client.EcommClientApplication'
+}

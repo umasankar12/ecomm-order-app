@@ -3,6 +3,8 @@ package org.ecomm.orderservice.facade;
 import org.ecomm.foundation.api.AppLogger;
 import org.ecomm.foundation.model.*;
 import org.ecomm.foundation.repo.OrderHistoryRepository;
+import org.ecomm.foundation.repo.OrderItemRepository;
+import org.ecomm.foundation.repo.OrderPaymentRepository;
 import org.ecomm.foundation.repo.OrderRepository;
 import org.ecomm.orderservice.util.AppRestHelper;
 import org.slf4j.Logger;
@@ -16,7 +18,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static javax.transaction.Transactional.TxType;
 
@@ -28,7 +33,9 @@ public class OrderFacadeImpl implements OrderFacade{
     Logger logger;
 
     final OrderRepository orderRepository;
+    final OrderItemRepository orderItemRepository;
     final OrderHistoryRepository orderHistoryRepository;
+    final OrderPaymentRepository orderPaymentRepository;
     final AppRestHelper restHelper;
     private final OrderValidator orderValidator;
 
@@ -38,13 +45,17 @@ public class OrderFacadeImpl implements OrderFacade{
 
     @Inject
     public OrderFacadeImpl(OrderRepository orderRepository,
+                           OrderItemRepository orderItemRepository,
                            OrderHistoryRepository orderHistoryRepository,
+                           OrderPaymentRepository orderPaymentRepository,
                            OrderValidator orderValidator,
                            AppRestHelper restHelper) {
         this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
         this.orderValidator = orderValidator;
         this.restHelper = restHelper;
         this.orderHistoryRepository = orderHistoryRepository;
+        this.orderPaymentRepository = orderPaymentRepository;
     }
 
     @Override
@@ -56,18 +67,25 @@ public class OrderFacadeImpl implements OrderFacade{
         validOrder.setCustomer(validCustomer);
         logger.info("Customer validated successfully.");
 
+        validOrder.setShippingAddress(preOrder.getShippingAddress());
+        Address shippingAddress = orderValidator.validateAddress(validOrder);
+        validOrder.setShippingAddress(shippingAddress);
+        logger.info("Address validated successfully");
+
         //Now Validate Items
         List<OrderItem> validItems = orderValidator.validateItems(preOrder);
         logger.info("Items retrieved successfully");
         if(orderValidator.validateOrderQuantity(validItems)){
-//            validOrder.setItems(validItems);
+            validOrder.setItems(validItems);
             logger.info("Order quantity validated");
         }
+
+        validOrder.setTotalAmt(orderValidator.calcOrderTotal(validOrder));
 
         //Now validate the payment
         List<OrderPayment> validPayments = orderValidator.validatePayments(preOrder);
         logger.info("Successfully retrieved payments");
-//        validOrder.setPayments(validPayments);
+        validOrder.setPayments(validPayments);
 
         return validOrder;
     }
@@ -76,27 +94,42 @@ public class OrderFacadeImpl implements OrderFacade{
     @Transactional(TxType.REQUIRES_NEW)
     public boolean processPayment(Order savedOrder) {
         //Now try and process all the payments.
-//        for(OrderPayment orderPayment: savedOrder.getPayments()) {
-//            try{
-//                ResponseEntity<PaymentHistory> paymentResponse =
-//                  restHelper.postEntityFromService(urlForProcessPayment, PaymentHistory.class, null);
-//                if(paymentResponse.getStatusCode() == HttpStatus.OK){
-//                    PaymentHistory history = paymentResponse.getBody();
-//                    if (!history.getStatus()) {
-//                        //TODO: Failed payment. Process to add payment to return payment queue
-//                        //failed payment
-//                        //add to
-//                        return false;
-//                    }
-//                    logger.info("payment successful");
-//                }
-//            }
-//            catch (Exception ex){
-//                ex.printStackTrace();
-//                return false;
-//
-//            }
-//        }
+        for(OrderPayment orderPayment: savedOrder.getPayments()) {
+            try{
+                orderPayment.setPaymentType("CUST_PAYMENT");
+                orderPayment.setOrder(savedOrder);
+                orderPayment.setRequestTime(new Timestamp(System.currentTimeMillis()));
+                orderPayment.setPaymentCode(UUID.randomUUID().toString());
+
+                Map<String, Object> paramMap = new HashMap<>();
+                paramMap.put("action", "PROCESS_PAYMENT");
+                paramMap.put("amount", orderPayment.getAmount());
+                paramMap.put("payment", orderPayment.getPayment());
+
+                ResponseEntity<PaymentHistory> paymentResponse =
+                  restHelper.postEntityFromService(urlForProcessPayment, PaymentHistory.class, paramMap);
+                if(paymentResponse.getStatusCode() == HttpStatus.OK){
+                    PaymentHistory history = paymentResponse.getBody();
+                    orderPayment.setStatus(history.getStatus());
+                    orderPayment.setResponseCode(System.currentTimeMillis() + "");
+                    orderPayment.setResponseTime(new Timestamp(System.currentTimeMillis()));
+                    orderPaymentRepository.save(orderPayment);
+                    if (!history.getStatus()) {
+                        //TODO: Failed payment. Process to add payment to return payment queue
+                        //failed payment
+                        //add to
+
+                        return false;
+                    }
+                    logger.info("payment successful");
+                }
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+                return false;
+
+            }
+        }
         return true;
     }
 
@@ -106,16 +139,18 @@ public class OrderFacadeImpl implements OrderFacade{
         Order savedOrder = orderRepository.save(detatched);
         logger.info("Order saved successfully. Order id: {}", savedOrder.getId());
 
-//        for (OrderItem orderItem: savedOrder.getItems()) {
-//            OrderHistory history = new OrderHistory()
-//              .setOrderItem(orderItem)
-//              .setStatus(true)
-//              .setAction("PENDING_PAYMENT")
-//              .setEntryTime(new Timestamp(System.currentTimeMillis()))
-//              .setUserType("REGISTERED")
-//              .setNotes("Log for item " + orderItem.getItem().getCode());
-//            orderHistoryRepository.save(history);
-//        }
+        for (OrderItem orderItem: savedOrder.getItems()) {
+            orderItem.setOrder(savedOrder);
+            orderItemRepository.save(orderItem);
+            OrderHistory history = new OrderHistory()
+              .setOrderItem(orderItem)
+              .setStatus(true)
+              .setAction("PENDING_PAYMENT")
+              .setEntryTime(new Timestamp(System.currentTimeMillis()))
+              .setUserType("REGISTERED")
+              .setNotes("Log for item " + orderItem.getItem().getCode());
+            orderHistoryRepository.save(history);
+        }
 
         return savedOrder;
     }
@@ -145,16 +180,16 @@ public class OrderFacadeImpl implements OrderFacade{
     @Transactional(TxType.SUPPORTS)
     Order updateOrderToPaymentComplete(Order savedOrder) {
         savedOrder.setStatus("PAYMENT_COMPLETE");
-//        for (OrderItem orderItem: savedOrder.getItems()) {
-//            OrderHistory history = new OrderHistory()
-//              .setOrderItem(orderItem)
-//              .setStatus(true)
-//              .setAction("PAYMENT_COMPLETE")
-//              .setEntryTime(new Timestamp(System.currentTimeMillis()))
-//              .setUserType("REGISTERED")
-//              .setNotes("Log for item " + orderItem.getItem().getCode());
-//            orderHistoryRepository.save(history);
-//        }
+        for (OrderItem orderItem: savedOrder.getItems()) {
+            OrderHistory history = new OrderHistory()
+              .setOrderItem(orderItem)
+              .setStatus(true)
+              .setAction("PAYMENT_COMPLETE")
+              .setEntryTime(new Timestamp(System.currentTimeMillis()))
+              .setUserType("REGISTERED")
+              .setNotes("Log for item " + orderItem.getItem().getCode());
+            orderHistoryRepository.save(history);
+        }
         Order updatedOrder = orderRepository.save(savedOrder);
         return updatedOrder;
     }

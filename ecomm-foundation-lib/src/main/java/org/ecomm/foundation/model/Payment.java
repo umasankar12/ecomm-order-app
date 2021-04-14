@@ -46,7 +46,7 @@ public class Payment {
     @Column(name = "cvv", nullable = false)
     private int cvv;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "billing_address", referencedColumnName = "id")
     private Address billingAddress;
 

@@ -4,14 +4,16 @@ import org.ecomm.customerservice.dto.AddressPayload;
 import org.ecomm.customerservice.dto.CustomerPayload;
 import org.ecomm.customerservice.dto.GuestCustomerPayload;
 import org.ecomm.customerservice.service.AddressService;
+import org.ecomm.customerservice.service.CustomerPaymentService;
 import org.ecomm.customerservice.service.CustomerService;
 import org.ecomm.customerservice.service.GuestCustomerService;
-import org.ecomm.foundation.model.Address;
-import org.ecomm.foundation.model.Customer;
-import org.ecomm.foundation.model.GuestCustomer;
+import org.ecomm.foundation.model.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Inject;
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -27,16 +29,30 @@ public class CustomerController {
 
     GuestCustomerService guestCustomerService;
 
+    CustomerPaymentService customerPaymentService;
+
+    @Value("${app.paymentService.getItem.url}")
+    String urlForOPaymentService;
+
     @Inject
-    public CustomerController(CustomerService customerService, AddressService addressService, GuestCustomerService guestCustomerService) {
+    public CustomerController(CustomerService customerService,
+                              AddressService addressService,
+                              GuestCustomerService guestCustomerService,
+                              CustomerPaymentService customerPaymentService) {
         this.customerService = customerService;
         this.addressService = addressService;
         this.guestCustomerService = guestCustomerService;
+        this.customerPaymentService = customerPaymentService;
     }
 
     @PostMapping("/addCustomer")
     public @ResponseBody Customer saveCustomer(@RequestBody CustomerPayload customer) {
-        return customerService.saveCustomer(customer);
+        RestTemplate template = new RestTemplate();
+        Payment payment = template.getForObject(urlForOPaymentService+"/"+customer.getPaymentId(), Payment.class);
+        CustomerPayment customerPayment  = new CustomerPayment();
+        Customer savedCustomer = customerService.saveCustomer(customer);
+        customerPaymentService.saveCustomerPaymentDetails(savedCustomer,payment);
+        return savedCustomer;
     }
 
     @PostMapping("/addAddress")

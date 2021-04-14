@@ -1,9 +1,7 @@
 package org.ecomm.foundation.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -12,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @NoArgsConstructor
+@ToString
 @EqualsAndHashCode
 @Entity
 @Table(schema = "customer")
@@ -53,9 +52,14 @@ public class Customer {
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "customers")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "CustomerAddress", schema = "customer",
+      joinColumns = @JoinColumn(name = "customer_id"),
+      inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
     private List<Address> addresses = new ArrayList<>();
 
     public int getId() {

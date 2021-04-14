@@ -90,7 +90,6 @@ public class PaymentController {
          return result.getFirst() ?
            PaymentResponse.createSuccessResponse(paymentRequest.getPayment(), result.getSecond()) :
            PaymentResponse.createFailureResponse(paymentRequest.getPayment(), -1, result.getSecond());
-
      }
 
 /**

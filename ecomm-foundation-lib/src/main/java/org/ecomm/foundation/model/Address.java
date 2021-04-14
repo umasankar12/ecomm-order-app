@@ -1,10 +1,7 @@
 package org.ecomm.foundation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,8 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @NoArgsConstructor
-//@Getter
-//@Setter
+@ToString
 @EqualsAndHashCode
 @Entity
 @Table(schema = "customer")
@@ -57,11 +53,7 @@ public class Address {
     @Column(name = "nickname", nullable = true, length = 200)
     private String nickname;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "CustomerAddress", schema = "customer",
-            joinColumns = @JoinColumn(name = "address_id"),
-            inverseJoinColumns = @JoinColumn(name = "customer_id")
-    )
+    @ManyToMany(mappedBy = "addresses", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Customer> customers = new HashSet<>();
 
@@ -154,4 +146,5 @@ public class Address {
         this.customers = customers;
         return this;
     }
+    
 }

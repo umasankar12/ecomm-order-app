@@ -3,7 +3,6 @@ package org.ecomm.foundation.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.util.Objects;
@@ -12,13 +11,15 @@ import java.util.Objects;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(schema = "inventory",name="item")
-public class Item{
+@Table(schema = "inventory")
+public class Item {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(generator="inventory.item_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "inventory.item_id_seq", sequenceName = "inventory.item_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "inventory.item_id_seq")
+    @SequenceGenerator(name = "inventory.item_id_seq", sequenceName = "inventory.item_id_seq",
+      initialValue = 100,
+      allocationSize = 1)
     private int id;
     @Basic
     @Column(name = "code", nullable = false, length = 20)
@@ -131,4 +132,5 @@ public class Item{
         this.endDate = endDate;
         return this;
     }
+
 }

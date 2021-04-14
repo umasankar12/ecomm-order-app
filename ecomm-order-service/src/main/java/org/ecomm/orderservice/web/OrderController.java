@@ -83,7 +83,7 @@ public class OrderController {
     public ResponseEntity<Order> createOrderForUser(@RequestBody Order transOrder) {
         try {
             assert (transOrder.getCustomer().getId() >= 0);
-            Integer customerId = transOrder.getCustomer().getId();
+            Integer customerId = transOrder.getInputCustomer().getId();
             logger.info("Going to create new order for {}", customerId);
             Order savedOrder = orderFacade.createOrder(transOrder);
 

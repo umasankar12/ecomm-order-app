@@ -43,6 +43,8 @@ subprojects {
 
         compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
         compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test:2.4.4'
     }
 
 }

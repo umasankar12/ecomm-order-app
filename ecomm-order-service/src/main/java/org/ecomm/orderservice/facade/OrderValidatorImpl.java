@@ -1,10 +1,14 @@
 package org.ecomm.orderservice.facade;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import org.ecomm.foundation.api.AppLogger;
 import org.ecomm.foundation.model.*;
 import org.ecomm.orderservice.util.AppRestHelper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.annotation.RequestScope;
 
 import javax.inject.Inject;
@@ -31,6 +35,9 @@ public class OrderValidatorImpl implements OrderValidator {
     @Value("${app.paymentService.getItem.url}")
     String urlForPayment;
 
+    @Value("${app.customerService.saveAddess.url}")
+    String urlForAddress;
+
     @Inject
     OrderValidatorImpl(AppRestHelper restHelper) {
         this.restHelper = restHelper;
@@ -39,11 +46,11 @@ public class OrderValidatorImpl implements OrderValidator {
     @Override
     public List<OrderItem> validateItems(Order preOrder) throws Exception {
         List<OrderItem> validItems = new ArrayList<>();
-//        for (OrderItem orderItem : preOrder.getItems()) {
-//            Item invItem = restHelper.getEntityFromService(urlForItem + "/" + orderItem.getItem().getCode(), Item.class);
-//            orderItem.setItem(invItem);
-//            validItems.add(orderItem);
-//        }
+        for (OrderItem orderItem : preOrder.getItems()) {
+            Item invItem = restHelper.getEntityFromService(urlForItem + "/" + orderItem.getItem().getCode(), Item.class);
+            orderItem.setItem(invItem);
+            validItems.add(orderItem);
+        }
 
         return validItems;
     }
@@ -51,23 +58,44 @@ public class OrderValidatorImpl implements OrderValidator {
     @Override
     public List<OrderPayment> validatePayments(Order preOrder) throws Exception {
         List<OrderPayment> validPayments = new ArrayList<>();
-//        for (OrderPayment orderPayment : preOrder.getPayments()) {
-//            Integer paymentId = orderPayment.getPayment().getId();
-//            Payment payment = restHelper.getEntityFromService(urlForPayment + "/" + paymentId, Payment.class);
-//            orderPayment.setPayment(payment);
-//            validPayments.add(orderPayment);
-//        }
+        for (OrderPayment orderPayment : preOrder.getPayments()) {
+            Integer paymentId = orderPayment.getPayment().getId();
+            Payment payment = restHelper.getEntityFromService(urlForPayment + "/" + paymentId, Payment.class);
+            orderPayment.setPayment(payment);
+            validPayments.add(orderPayment);
+        }
         return validPayments;
     }
 
-    @Override
-    public Address validateAddress(Order preOrder) {
+    private Address saveAddress(Address detached) {
+        try{
+            ResponseEntity<Address> addrResponse = restHelper.postEntityFromService(urlForAddress, Address.class, detached);
+            return addrResponse.getBody();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
+    public Address validateAddress(Order preOrder) throws Exception {
+        List<Address> customerAddresses = preOrder.getCustomer().getAddresses();
+        Address shippingAddress = preOrder.getShippingAddress();
+
+        Address filteredAddr = customerAddresses.stream()
+          .filter(a -> a.getId() == shippingAddress.getId())
+          .findFirst()
+          .orElse(saveAddress(shippingAddress));
+
+        if(filteredAddr ==null)
+            throw new Exception("Could Not save Temporary address");
+        return filteredAddr;
+    }
+
+    @Override
     public Customer validateCustomer(Order preOrder) throws Exception {
-        Integer customerId = preOrder.getCustomer().getId();
+        Integer customerId = preOrder.getInputCustomer().getId();
         logger.info("Going to create new order for {}", customerId);
         Customer validCustomer = restHelper.getEntityFromService(urlForUser + "/" + customerId, Customer.class);
         if (validCustomer == null)
@@ -87,6 +115,16 @@ public class OrderValidatorImpl implements OrderValidator {
                 ));
             }
         }
+
         return true;
+    }
+
+    @Override
+    public Double calcOrderTotal(Order order) {
+        Double total = 0.0;
+        for (OrderItem orderItem : order.getItems()) {
+            total = total + orderItem.getQuantity().doubleValue() * orderItem.getItem().getUnitPrice().doubleValue();
+        }
+        return total;
     }
 }

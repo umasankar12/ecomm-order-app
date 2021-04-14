@@ -17,7 +17,7 @@ public class PaymentRequest {
     String status;
     String reason;
     Timestamp entryTime;
-    double amount;
+    Double amount;
     Payment payment;
 
     public String getSource() {

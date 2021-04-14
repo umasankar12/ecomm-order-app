@@ -10,6 +10,16 @@ public class CustomerPayload {
     private String phone;
     private String email;
     private Date dob;
+    private int paymentId;
+
+    public int getPaymentId() {
+        return paymentId;
+    }
+
+    public CustomerPayload setPaymentId(int paymentId) {
+        this.paymentId = paymentId;
+        return this;
+    }
 
     public String getFirstName() {
         return firstName;
