@@ -51,12 +51,13 @@ public class EcommPosClientApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Ecom POS Service runner started");
+        logger.info("Ecom POS Service runner started");
         String path = ResourceUtils.getFile(orderPath).getPath();
         orderReader.readOrders(path)
                 .orElseThrow(OrderNotFoundException::new)
                 .forEach(this::createOrder);
 
+        logger.info("Order processing completed");
     }
 
     private void createOrder(Order order){

@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Named
 public class BulkOrderReader {
@@ -29,6 +30,7 @@ public class BulkOrderReader {
     public Optional<List<Order>> readOrders(final String filePath) throws Exception {
         return Files.lines(Path.of(filePath))
                 .reduce(String::concat)
-                .map(this::fetchOrderFromFileContent);
+                .map(this::fetchOrderFromFileContent)
+                .filter(Predicate.not(List::isEmpty));
     }
 }
