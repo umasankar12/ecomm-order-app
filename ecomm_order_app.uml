@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.ecomm.foundation.model.Customer</OriginalElement>
+  <nodes>
+    <node x="0.0" y="0.0">org.ecomm.foundation.model.Customer</node>
+    <node x="1174.170271360073" y="398.2799721150738">org.ecomm.foundation.model.OrderItem</node>
+    <node x="1491.0990203063548" y="365.27997211507375">org.ecomm.foundation.model.Item</node>
+    <node x="-231.76470588235293" y="685.9938742733511">org.ecomm.foundation.model.PaymentHistory</node>
+    <node x="1166.170271360073" y="23.219640844347843">org.ecomm.foundation.model.OrderHistory</node>
+    <node x="1144.2403134530668" y="974.0783387599135">org.ecomm.foundation.model.OrderPayment</node>
+    <node x="407.49257528265434" y="643.514166823943">org.ecomm.foundation.model.GuestCustomer</node>
+    <node x="822.0866862839562" y="560.3655254481188">org.ecomm.foundation.model.Order</node>
+    <node x="203.7329933920721" y="317.60027849233376">org.ecomm.foundation.model.Address</node>
+    <node x="12.86766404560467" y="1228.4644625086453">org.ecomm.foundation.model.Payment</node>
+    <node x="173.00518103660266" y="959.7048362884045">org.ecomm.foundation.model.CustomerPayment</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.ecomm.foundation.model.Address" target="org.ecomm.foundation.model.Customer" relationship="TO_MANY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Customer" target="org.ecomm.foundation.model.Address" relationship="TO_MANY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.OrderItem" target="org.ecomm.foundation.model.Order" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.CustomerPayment" target="org.ecomm.foundation.model.Customer" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="372.0" y="939.0" />
+      <point x="372.0" y="939.0" />
+      <point x="398.0" y="893.0" />
+      <point x="398.0" y="893.0" />
+      <point x="410.0" y="869.0" />
+      <point x="410.0" y="869.0" />
+      <point x="420.0" y="843.0" />
+      <point x="420.0" y="843.0" />
+      <point x="429.0" y="816.0" />
+      <point x="429.0" y="816.0" />
+      <point x="437.0" y="760.0" />
+      <point x="437.0" y="760.0" />
+      <point x="431.0" y="704.0" />
+      <point x="431.0" y="704.0" />
+      <point x="423.0" y="676.0" />
+      <point x="423.0" y="676.0" />
+      <point x="412.0" y="647.0" />
+      <point x="412.0" y="647.0" />
+      <point x="385.0" y="589.0" />
+      <point x="385.0" y="589.0" />
+      <point x="350.0" y="529.0" />
+      <point x="350.0" y="529.0" />
+      <point x="198.0" y="282.0" />
+      <point x="198.0" y="282.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Customer" target="org.ecomm.foundation.model.Address" relationship="DEPENDENCY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Order" target="org.ecomm.foundation.model.Customer" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="824.0" y="755.0" />
+      <point x="824.0" y="755.0" />
+      <point x="765.0" y="751.0" />
+      <point x="765.0" y="751.0" />
+      <point x="699.0" y="742.0" />
+      <point x="699.0" y="742.0" />
+      <point x="666.0" y="735.0" />
+      <point x="666.0" y="735.0" />
+      <point x="632.0" y="727.0" />
+      <point x="632.0" y="727.0" />
+      <point x="600.0" y="716.0" />
+      <point x="600.0" y="716.0" />
+      <point x="569.0" y="702.0" />
+      <point x="569.0" y="702.0" />
+      <point x="541.0" y="686.0" />
+      <point x="541.0" y="686.0" />
+      <point x="514.0" y="668.0" />
+      <point x="514.0" y="668.0" />
+      <point x="489.0" y="647.0" />
+      <point x="489.0" y="647.0" />
+      <point x="466.0" y="624.0" />
+      <point x="466.0" y="624.0" />
+      <point x="443.0" y="599.0" />
+      <point x="443.0" y="599.0" />
+      <point x="422.0" y="573.0" />
+      <point x="422.0" y="573.0" />
+      <point x="380.0" y="516.0" />
+      <point x="380.0" y="516.0" />
+      <point x="232.0" y="303.0" />
+      <point x="232.0" y="303.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Address" target="org.ecomm.foundation.model.Customer" relationship="DEPENDENCY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.GuestCustomer" target="org.ecomm.foundation.model.Address" relationship="TO_MANY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.GuestCustomer" target="org.ecomm.foundation.model.Address" relationship="DEPENDENCY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Order" target="org.ecomm.foundation.model.OrderPayment" relationship="TO_MANY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.OrderItem" target="org.ecomm.foundation.model.Item" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.OrderHistory" target="org.ecomm.foundation.model.OrderItem" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.CustomerPayment" target="org.ecomm.foundation.model.Payment" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Customer" target="org.ecomm.foundation.model.Order" relationship="DEPENDENCY">
+      <point x="0.0" y="0.0" />
+      <point x="295.0" y="421.0" />
+      <point x="295.0" y="421.0" />
+      <point x="355.0" y="509.0" />
+      <point x="355.0" y="509.0" />
+      <point x="398.0" y="564.0" />
+      <point x="398.0" y="564.0" />
+      <point x="422.0" y="590.0" />
+      <point x="422.0" y="590.0" />
+      <point x="447.0" y="614.0" />
+      <point x="447.0" y="614.0" />
+      <point x="474.0" y="637.0" />
+      <point x="474.0" y="637.0" />
+      <point x="503.0" y="658.0" />
+      <point x="503.0" y="658.0" />
+      <point x="534.0" y="676.0" />
+      <point x="534.0" y="676.0" />
+      <point x="568.0" y="692.0" />
+      <point x="568.0" y="692.0" />
+      <point x="604.0" y="706.0" />
+      <point x="604.0" y="706.0" />
+      <point x="641.0" y="718.0" />
+      <point x="641.0" y="718.0" />
+      <point x="716.0" y="736.0" />
+      <point x="716.0" y="736.0" />
+      <point x="787.0" y="749.0" />
+      <point x="787.0" y="749.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.OrderPayment" target="org.ecomm.foundation.model.Payment" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="1180.0" y="1033.0" />
+      <point x="1180.0" y="1033.0" />
+      <point x="1117.0" y="965.0" />
+      <point x="1117.0" y="965.0" />
+      <point x="1064.0" y="916.0" />
+      <point x="1064.0" y="916.0" />
+      <point x="1003.0" y="869.0" />
+      <point x="1003.0" y="869.0" />
+      <point x="970.0" y="848.0" />
+      <point x="970.0" y="848.0" />
+      <point x="936.0" y="829.0" />
+      <point x="936.0" y="829.0" />
+      <point x="864.0" y="801.0" />
+      <point x="864.0" y="801.0" />
+      <point x="827.0" y="792.0" />
+      <point x="827.0" y="792.0" />
+      <point x="790.0" y="786.0" />
+      <point x="790.0" y="786.0" />
+      <point x="754.0" y="783.0" />
+      <point x="754.0" y="783.0" />
+      <point x="717.0" y="784.0" />
+      <point x="717.0" y="784.0" />
+      <point x="682.0" y="787.0" />
+      <point x="682.0" y="787.0" />
+      <point x="648.0" y="793.0" />
+      <point x="648.0" y="793.0" />
+      <point x="615.0" y="802.0" />
+      <point x="615.0" y="802.0" />
+      <point x="584.0" y="815.0" />
+      <point x="584.0" y="815.0" />
+      <point x="555.0" y="830.0" />
+      <point x="555.0" y="830.0" />
+      <point x="529.0" y="847.0" />
+      <point x="529.0" y="847.0" />
+      <point x="480.0" y="890.0" />
+      <point x="480.0" y="890.0" />
+      <point x="435.0" y="939.0" />
+      <point x="435.0" y="939.0" />
+      <point x="329.0" y="1079.0" />
+      <point x="329.0" y="1079.0" />
+      <point x="242.0" y="1188.0" />
+      <point x="242.0" y="1188.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Payment" target="org.ecomm.foundation.model.Address" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="136.0" y="1281.0" />
+      <point x="136.0" y="1281.0" />
+      <point x="352.0" y="969.0" />
+      <point x="352.0" y="969.0" />
+      <point x="369.0" y="941.0" />
+      <point x="369.0" y="941.0" />
+      <point x="385.0" y="913.0" />
+      <point x="385.0" y="913.0" />
+      <point x="410.0" y="856.0" />
+      <point x="410.0" y="856.0" />
+      <point x="426.0" y="798.0" />
+      <point x="426.0" y="798.0" />
+      <point x="429.0" y="768.0" />
+      <point x="429.0" y="768.0" />
+      <point x="428.0" y="737.0" />
+      <point x="428.0" y="737.0" />
+      <point x="418.0" y="677.0" />
+      <point x="418.0" y="677.0" />
+      <point x="409.0" y="647.0" />
+      <point x="409.0" y="647.0" />
+      <point x="399.0" y="618.0" />
+      <point x="399.0" y="618.0" />
+      <point x="377.0" y="565.0" />
+      <point x="377.0" y="565.0" />
+      <point x="355.0" y="521.0" />
+      <point x="355.0" y="521.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Order" target="org.ecomm.foundation.model.OrderItem" relationship="TO_MANY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Customer" target="org.ecomm.foundation.model.Order" relationship="TO_MANY">
+      <point x="0.0" y="0.0" />
+      <point x="295.0" y="421.0" />
+      <point x="295.0" y="421.0" />
+      <point x="355.0" y="509.0" />
+      <point x="355.0" y="509.0" />
+      <point x="398.0" y="564.0" />
+      <point x="398.0" y="564.0" />
+      <point x="422.0" y="590.0" />
+      <point x="422.0" y="590.0" />
+      <point x="447.0" y="614.0" />
+      <point x="447.0" y="614.0" />
+      <point x="474.0" y="637.0" />
+      <point x="474.0" y="637.0" />
+      <point x="503.0" y="658.0" />
+      <point x="503.0" y="658.0" />
+      <point x="534.0" y="676.0" />
+      <point x="534.0" y="676.0" />
+      <point x="568.0" y="692.0" />
+      <point x="568.0" y="692.0" />
+      <point x="604.0" y="706.0" />
+      <point x="604.0" y="706.0" />
+      <point x="641.0" y="718.0" />
+      <point x="641.0" y="718.0" />
+      <point x="716.0" y="736.0" />
+      <point x="716.0" y="736.0" />
+      <point x="787.0" y="749.0" />
+      <point x="787.0" y="749.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.GuestCustomer" target="org.ecomm.foundation.model.Order" relationship="DEPENDENCY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.OrderPayment" target="org.ecomm.foundation.model.Order" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.OrderHistory" target="org.ecomm.foundation.model.OrderItem" relationship="DEPENDENCY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.CustomerPayment" target="org.ecomm.foundation.model.GuestCustomer" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Order" target="org.ecomm.foundation.model.GuestCustomer" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.Order" target="org.ecomm.foundation.model.Address" relationship="TO_ONE">
+      <point x="0.0" y="0.0" />
+      <point x="892.7501280546459" y="756.5875389689112" />
+      <point x="892.7501280546459" y="756.5875389689112" />
+      <point x="845.8019106750118" y="752.2276892976008" />
+      <point x="845.8019106750118" y="752.2276892976008" />
+      <point x="800.242034145054" y="745.7859764341874" />
+      <point x="800.242034145054" y="745.7859764341874" />
+      <point x="756.0704984647724" y="737.2624003786711" />
+      <point x="756.0704984647724" y="737.2624003786711" />
+      <point x="713.2873036341672" y="726.6569611310521" />
+      <point x="713.2873036341672" y="726.6569611310521" />
+      <point x="671.892449653238" y="713.9696586913299" />
+      <point x="671.892449653238" y="713.9696586913299" />
+      <point x="631.8859365219852" y="699.2004930595049" />
+      <point x="631.8859365219852" y="699.2004930595049" />
+      <point x="586.9663797760866" y="679.33855606569" />
+      <point x="586.9663797760866" y="679.33855606569" />
+      <point x="549.9679384857989" y="660.058686850975" />
+      <point x="549.9679384857989" y="660.058686850975" />
+      <point x="514.3578380451875" y="638.6969544441574" />
+      <point x="514.3578380451875" y="638.6969544441574" />
+      <point x="480.1360784542523" y="615.2533588452368" />
+      <point x="480.1360784542523" y="615.2533588452368" />
+      <point x="441.96540083872435" y="585.2712535564771" />
+      <point x="441.96540083872435" y="585.2712535564771" />
+      <point x="410.7517130887543" y="557.3169543746667" />
+      <point x="410.7517130887543" y="557.3169543746667" />
+      <point x="380.92636618846063" y="527.2807920007534" />
+      <point x="380.92636618846063" y="527.2807920007534" />
+      <point x="352.48936013784316" y="495.16276643473725" />
+      <point x="352.48936013784316" y="495.16276643473725" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="org.ecomm.foundation.model.GuestCustomer" target="org.ecomm.foundation.model.Order" relationship="TO_MANY">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Balloons" zoom="0.85" showDependencies="true" x="785.4117647058824" y="729.2941176470589" />
+  <SelectedNodes>
+    <node>org.ecomm.foundation.model.Item</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
