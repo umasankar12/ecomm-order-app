@@ -8,6 +8,7 @@ import org.ecomm.foundation.model.*;
 import org.ecomm.orderservice.util.AppRestHelper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -15,9 +16,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
-@RequestScope
+@Scope("prototype")
 public class OrderValidatorImpl implements OrderValidator {
 
     @AppLogger
@@ -46,12 +48,14 @@ public class OrderValidatorImpl implements OrderValidator {
     @Override
     public List<OrderItem> validateItems(Order preOrder) throws Exception {
         List<OrderItem> validItems = new ArrayList<>();
+        List<Integer> ids = preOrder.getItems().stream()
+                .map(orderItem -> orderItem.getItem().getId()).collect(Collectors.toList());
         for (OrderItem orderItem : preOrder.getItems()) {
-            Item invItem = restHelper.getEntityFromService(urlForItem + "/" + orderItem.getItem().getCode(), Item.class);
+            Item invItem = restHelper.getEntityFromService(urlForItem + "/item/" + orderItem.getItem().getCode(), Item.class);
             orderItem.setItem(invItem);
             validItems.add(orderItem);
         }
-
+        ResponseEntity<List> items = restHelper.postEntityFromService(urlForItem+"/allItems",List.class ,ids);
         return validItems;
     }
 

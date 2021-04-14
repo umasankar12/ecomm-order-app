@@ -70,6 +70,53 @@ public class Order {
     private List<OrderItem> items;
 
 
+    @Transient
+    Customer inputCustomer;
+
+    @Transient
+    GuestCustomer inputGuest;
+
+    @Transient
+    String type = "REGISTERED";
+
+    @Transient
+    String requestId;
+
+    public String getSource() {
+        return source;
+    }
+
+    public Order setSource(String source) {
+        this.source = source;
+        return this;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public Order setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+        return this;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Order setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public Order setRequestId(String requestId) {
+        this.requestId = requestId;
+        return this;
+    }
 
     public List<OrderItem> getItems() {
         return items;
@@ -177,13 +224,6 @@ public class Order {
         this.guestCustomer = guestCustomer;
         return this;
     }
-
-
-    @Transient
-    Customer inputCustomer;
-
-    @Transient
-    GuestCustomer inputGuest;
 
     public List<OrderPayment> getPayments() {
         return payments;

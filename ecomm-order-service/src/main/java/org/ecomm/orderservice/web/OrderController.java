@@ -1,5 +1,6 @@
 package org.ecomm.orderservice.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ecomm.foundation.api.AppLogger;
 import org.ecomm.foundation.api.AppRequest;
 import org.ecomm.foundation.api.AppResponse;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,6 +22,8 @@ import javax.inject.Inject;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class OrderController {
@@ -35,6 +39,8 @@ public class OrderController {
 
     RestTemplate restTemplate = new RestTemplate();
 
+    final JmsTemplate jmsTemplate;
+
     @AppLogger
     Logger logger;
 
@@ -45,10 +51,12 @@ public class OrderController {
     @Inject
     public OrderController(OrderRepository orderRepository,
                            OrderFacade orderFacade,
-                           AppRestHelper restHelper) {
+                           AppRestHelper restHelper,
+                           JmsTemplate jmsTemplate) {
         this.orderRepository = orderRepository;
         this.orderFacade = orderFacade;
         this.restHelper = restHelper;
+        this.jmsTemplate = jmsTemplate;
     }
 
     /**
@@ -118,6 +126,27 @@ public class OrderController {
         }
     }
 
-//    @PostMapping
+    @PostMapping("/queuePosOrder")
+    public ResponseEntity<String> addPosOrder(@RequestBody Order transOrder) {
+        try {
+            //generate request id for the pos order
+            String requestId = UUID.randomUUID().toString();
+            transOrder.setRequestId(requestId);
+            transOrder.setSource("POS");
+            transOrder.setSourceId(requestId);
+            //publish the order message to kafka
+            Map<String, String> inputOrderMessage = new ObjectMapper().convertValue(transOrder, Map.class);
+            jmsTemplate.convertAndSend("ecomm.order.queue", inputOrderMessage);
+            return new ResponseEntity<>(
+                    //AppResponse.successOf(orders, "success", orderRequest),
+                    requestId,
+                    HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>(
+                    //AppResponse.failureOf(ex.getMessage(), orderRequest),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

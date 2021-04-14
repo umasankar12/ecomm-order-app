@@ -1,0 +1,98 @@
+[
+    {
+        "inputCustomer": {
+            "id": 1
+        },
+        "items": [
+            {
+                "item": {
+                    "code": "2345"
+                },
+                "notes": "2 units of puma shoe",
+                "quantity": 2
+            },
+            {
+                "item": {
+                    "code": "1212"
+                },
+                "notes": "1 unit of nike shoe",
+                "quantity": 1
+            }
+        ],
+        "payments": [
+            {
+                "payment": {
+                    "id": 2
+                },
+                "amount": 40.0
+            },
+            {
+                "payment": {
+                    "id": 5
+                },
+                "amount": 80.0
+            }
+        ],
+        "shippingAddress": {
+            "id": 16
+        }
+    },
+
+    {
+        "inputCustomer": {
+            "id": 2
+        },
+        "items": [
+            {
+                "item": {
+                    "code": "2345"
+                },
+                "notes": "2 units of puma shoe",
+                "quantity": 5
+            }
+        ],
+        "payments": [
+            {
+                "payment": {
+                    "id": 3
+                },
+                "amount": 150
+            },
+            {
+                "payment": {
+                    "id": 4
+                },
+                "amount": 100
+            }
+        ],
+        "shippingAddress": {
+            "id": -1
+        }
+    },
+    {
+        "inputCustomer": {
+            "id": 3
+        },
+        "items": [
+            {
+                "item": {
+                    "code": "1212"
+                },
+                "notes": "1 unit of nike shoe",
+                "quantity": 10
+            }
+        ],
+        "payments": [
+            {
+                "payment": {
+                    "id": 6
+                },
+                "amount": 200
+            }
+        ],
+        "shippingAddress": {
+            "id": 16
+        }
+    }
+
+]

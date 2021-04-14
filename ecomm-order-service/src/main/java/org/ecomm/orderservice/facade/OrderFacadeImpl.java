@@ -26,6 +26,7 @@ import java.util.UUID;
 import static javax.transaction.Transactional.TxType;
 
 @Named
+@Scope("prototype")
 public class OrderFacadeImpl implements OrderFacade{
 
 

@@ -6,4 +6,5 @@ include 'ecomm-order-service'
 include 'ecomm-customer-service'
 include 'ecomm-item-service'
 include 'ecomm-service-tester'
+include 'ecomm-pos-runner'
 
