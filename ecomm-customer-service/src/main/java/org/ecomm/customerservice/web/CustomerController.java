@@ -70,7 +70,6 @@ public class CustomerController {
 
     @GetMapping("/get/{id}")
     public Customer getCustomerById(@PathVariable("id") int id) {
-        List<Address> addresses = addressService.getAddressRepository().findAll();
         return customerService.getCustomerRepository().findById(id).get();
     }
 
