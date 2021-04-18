@@ -90,7 +90,7 @@ public class OrderValidatorImpl implements OrderValidator {
         Address filteredAddr = customerAddresses.stream()
           .filter(a -> a.getId() == shippingAddress.getId())
           .findFirst()
-          .orElse(saveAddress(shippingAddress));
+          .orElseGet(() -> saveAddress(shippingAddress));
 
         if(filteredAddr ==null)
             throw new Exception("Could Not save Temporary address");

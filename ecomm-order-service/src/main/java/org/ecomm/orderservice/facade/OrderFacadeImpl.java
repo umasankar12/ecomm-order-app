@@ -17,17 +17,19 @@ import org.springframework.web.context.annotation.RequestScope;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.transaction.Transactional;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static javax.transaction.Transactional.TxType;
 
 @Named
 @Scope("prototype")
-public class OrderFacadeImpl implements OrderFacade{
+public class OrderFacadeImpl implements OrderFacade {
 
 
     @AppLogger
@@ -43,6 +45,8 @@ public class OrderFacadeImpl implements OrderFacade{
     @Value("${app.paymentService.processPayment.url}")
     String urlForProcessPayment;
 
+    @Value("${app.itemService.updateQuantity.url}")
+    String urlForItemQuantityUpdate;
 
     @Inject
     public OrderFacadeImpl(OrderRepository orderRepository,
@@ -76,7 +80,7 @@ public class OrderFacadeImpl implements OrderFacade{
         //Now Validate Items
         List<OrderItem> validItems = orderValidator.validateItems(preOrder);
         logger.info("Items retrieved successfully");
-        if(orderValidator.validateOrderQuantity(validItems)){
+        if (orderValidator.validateOrderQuantity(validItems)) {
             validOrder.setItems(validItems);
             logger.info("Order quantity validated");
         }
@@ -95,8 +99,8 @@ public class OrderFacadeImpl implements OrderFacade{
     @Transactional(TxType.REQUIRES_NEW)
     public boolean processPayment(Order savedOrder) {
         //Now try and process all the payments.
-        for(OrderPayment orderPayment: savedOrder.getPayments()) {
-            try{
+        for (OrderPayment orderPayment : savedOrder.getPayments()) {
+            try {
                 orderPayment.setPaymentType("CUST_PAYMENT");
                 orderPayment.setOrder(savedOrder);
                 orderPayment.setRequestTime(new Timestamp(System.currentTimeMillis()));
@@ -108,8 +112,8 @@ public class OrderFacadeImpl implements OrderFacade{
                 paramMap.put("payment", orderPayment.getPayment());
 
                 ResponseEntity<PaymentHistory> paymentResponse =
-                  restHelper.postEntityFromService(urlForProcessPayment, PaymentHistory.class, paramMap);
-                if(paymentResponse.getStatusCode() == HttpStatus.OK){
+                        restHelper.postEntityFromService(urlForProcessPayment, PaymentHistory.class, paramMap);
+                if (paymentResponse.getStatusCode() == HttpStatus.OK) {
                     PaymentHistory history = paymentResponse.getBody();
                     orderPayment.setStatus(history.getStatus());
                     orderPayment.setResponseCode(System.currentTimeMillis() + "");
@@ -124,8 +128,7 @@ public class OrderFacadeImpl implements OrderFacade{
                     }
                     logger.info("payment successful");
                 }
-            }
-            catch (Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
                 return false;
 
@@ -140,16 +143,16 @@ public class OrderFacadeImpl implements OrderFacade{
         Order savedOrder = orderRepository.save(detatched);
         logger.info("Order saved successfully. Order id: {}", savedOrder.getId());
 
-        for (OrderItem orderItem: savedOrder.getItems()) {
+        for (OrderItem orderItem : savedOrder.getItems()) {
             orderItem.setOrder(savedOrder);
             orderItemRepository.save(orderItem);
             OrderHistory history = new OrderHistory()
-              .setOrderItem(orderItem)
-              .setStatus(true)
-              .setAction("PENDING_PAYMENT")
-              .setEntryTime(new Timestamp(System.currentTimeMillis()))
-              .setUserType("REGISTERED")
-              .setNotes("Log for item " + orderItem.getItem().getCode());
+                    .setOrderItem(orderItem)
+                    .setStatus(true)
+                    .setAction("PENDING_PAYMENT")
+                    .setEntryTime(new Timestamp(System.currentTimeMillis()))
+                    .setUserType("REGISTERED")
+                    .setNotes("Log for item " + orderItem.getItem().getCode());
             orderHistoryRepository.save(history);
         }
 
@@ -168,30 +171,47 @@ public class OrderFacadeImpl implements OrderFacade{
         Order savedOrder = this.createPendingOrder(validOrder);
 
         //Now try and process all the payments.
-        if(this.processPayment(savedOrder)) {
+        if (this.processPayment(savedOrder)) {
             logger.info("Successfully processed payments for order: {}", savedOrder.getId());
             Order updatedOrder = updateOrderToPaymentComplete(savedOrder);
             logger.info("Order status updated to Complete.");
+
+            this.updateInventoryItemsForOrder(updatedOrder);
             return updatedOrder;
         }
-
         return savedOrder;
     }
 
     @Transactional(TxType.SUPPORTS)
     Order updateOrderToPaymentComplete(Order savedOrder) {
         savedOrder.setStatus("PAYMENT_COMPLETE");
-        for (OrderItem orderItem: savedOrder.getItems()) {
+        for (OrderItem orderItem : savedOrder.getItems()) {
             OrderHistory history = new OrderHistory()
-              .setOrderItem(orderItem)
-              .setStatus(true)
-              .setAction("PAYMENT_COMPLETE")
-              .setEntryTime(new Timestamp(System.currentTimeMillis()))
-              .setUserType("REGISTERED")
-              .setNotes("Log for item " + orderItem.getItem().getCode());
+                    .setOrderItem(orderItem)
+                    .setStatus(true)
+                    .setAction("PAYMENT_COMPLETE")
+                    .setEntryTime(new Timestamp(System.currentTimeMillis()))
+                    .setUserType("REGISTERED")
+                    .setNotes("Log for item " + orderItem.getItem().getCode());
             orderHistoryRepository.save(history);
         }
         Order updatedOrder = orderRepository.save(savedOrder);
         return updatedOrder;
+    }
+
+    @Transactional(TxType.SUPPORTS)
+    void updateInventoryItemsForOrder(Order order) throws Exception {
+        List<Item> requestItems = order.getItems()
+                .stream()
+                .map(oi -> new Item()
+                        .setCode(oi.getItem().getCode())
+                        .setAvailQty(BigInteger.valueOf(-1*oi.getQuantity())))
+                .collect(Collectors
+                        .toList());
+        ResponseEntity<String> response =
+                this.restHelper.postEntityFromService(urlForItemQuantityUpdate, String.class, requestItems);
+        if (response.getStatusCode() != HttpStatus.OK)
+            throw new Exception("Cannot update Items: " + response.getBody());
+        logger.info("Item quantity update successful: {}", response.getBody());
     }
 }

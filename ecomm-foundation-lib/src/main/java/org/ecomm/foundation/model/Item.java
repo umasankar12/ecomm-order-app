@@ -14,6 +14,8 @@ import java.util.Objects;
 @Table(schema = "inventory")
 public class Item {
 
+    public static enum PROP {NAME, DESCRIPTION, QUANTITY, UNI_PRICE, TAGS, START_DATE, END_DATE}
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "inventory.item_id_seq")

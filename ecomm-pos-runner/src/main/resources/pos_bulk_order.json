@@ -1,72 +1,66 @@
 [
     {
         "inputCustomer": {
-            "id": 1
+            "id": 10
         },
         "items": [
             {
                 "item": {
-                    "code": "2345"
+                    "code": "SA-M198"
                 },
-                "notes": "2 units of puma shoe",
-                "quantity": 2
+                "notes": "2 units of LL Mountain Seat Assembly",
+                "quantity": 10
             },
             {
                 "item": {
-                    "code": "1212"
+                    "code": "SA-M237"
                 },
-                "notes": "1 unit of nike shoe",
-                "quantity": 1
+                "notes": "1 unit of ML Mountain Seat Assembly",
+                "quantity": 10
             }
         ],
         "payments": [
             {
                 "payment": {
-                    "id": 2
+                    "id": 11
                 },
-                "amount": 40.0
+                "amount": 987.7
             },
             {
                 "payment": {
-                    "id": 5
+                    "id": 39
                 },
-                "amount": 80.0
+                "amount": 1089.9
             }
         ],
         "shippingAddress": {
-            "id": 16
+            "id": 65
         }
     },
 
     {
         "inputCustomer": {
-            "id": 2
+            "id": 11
         },
         "items": [
             {
                 "item": {
-                    "code": "2345"
+                    "code": "SA-M687"
                 },
                 "notes": "2 units of puma shoe",
-                "quantity": 5
+                "quantity": 2
             }
         ],
         "payments": [
             {
                 "payment": {
-                    "id": 3
+                    "id": 40
                 },
-                "amount": 150
-            },
-            {
-                "payment": {
-                    "id": 4
-                },
-                "amount": 100
+                "amount": 292
             }
         ],
         "shippingAddress": {
-            "id": -1
+            "id": 95
         }
     },
     {

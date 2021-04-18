@@ -4,7 +4,6 @@ import org.ecomm.ecommitemservice.dto.ItemPayload;
 import org.ecomm.ecommitemservice.service.ItemService;
 import org.ecomm.foundation.api.AppLogger;
 import org.ecomm.foundation.api.AppRequest;
-import org.ecomm.foundation.api.AppResponse;
 import org.ecomm.foundation.model.Item;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -40,6 +39,7 @@ public class ItemServiceController {
                     new ResponseEntity<>(item, HttpStatus.OK);
             return responseEntity;
         } catch (Exception ex) {
+            ex.printStackTrace();
             return new ResponseEntity<Item>(new Item(), HttpStatus.NOT_FOUND);
         }
     }
@@ -60,11 +60,12 @@ public class ItemServiceController {
 
     }
 
-    @PostMapping("/allItems")
-    public ResponseEntity<List<Item>> findAllItemsById(@RequestBody List<Integer> ids) {
+    @GetMapping("/allItems")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<List<Item>> findAllItemsById() {
         try {
             logger.info("retrieving items for set of item codes ");
-            List<Item> items = itemService.getItemRepository().findAllById(ids);
+            List<Item> items = itemService.getItemRepository().findAll();
             ResponseEntity<List<Item>> responseEntity =
                     new ResponseEntity<>(items, HttpStatus.OK);
             return responseEntity;
@@ -88,6 +89,17 @@ public class ItemServiceController {
                     (new ArrayList<Item>(), HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @PostMapping("/updateItemQuantity")
+    public ResponseEntity<String> updateItemQuantity(@RequestBody List<Item> items) {
+        try {
+            itemService.bulkUpdateItems(items, Item.PROP.QUANTITY);
+            return new ResponseEntity<String>("Success", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(e.getStackTrace().toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
