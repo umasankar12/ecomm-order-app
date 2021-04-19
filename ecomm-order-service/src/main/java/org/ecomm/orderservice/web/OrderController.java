@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class OrderController {
 
     @Value("${app.customerService.getUser.url}")

@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin("*")
 public class CustomerController {
 
     CustomerService customerService;

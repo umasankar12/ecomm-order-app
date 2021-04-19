@@ -55,7 +55,6 @@ public class OrderValidatorImpl implements OrderValidator {
             orderItem.setItem(invItem);
             validItems.add(orderItem);
         }
-        ResponseEntity<List> items = restHelper.postEntityFromService(urlForItem+"/allItems",List.class ,ids);
         return validItems;
     }
 

@@ -1,23 +1,16 @@
 package org.ecomm.foundation.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Entity
 @Table(schema = "customer")
 public class CustomerPayment {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(generator="customer.customerpayment_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "customer.customerpayment_id_seq", sequenceName = "customer.customerpayment_id_seq", allocationSize = 1)
     private int id;
 
     @Basic
@@ -30,16 +23,19 @@ public class CustomerPayment {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @JsonIgnore
     private Customer customerByCustomerId;
 
     @ManyToOne
     @JoinColumn(name = "guest_id", referencedColumnName = "id")
+    @JsonIgnore
     private GuestCustomer customerByGuestId;
 
 
     @ManyToOne
     @JoinColumn(name = "payment_id", referencedColumnName = "id")
     private Payment payment;
+
 
     public int getId() {
         return id;

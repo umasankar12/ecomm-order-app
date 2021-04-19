@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class ItemServiceController {
 
     @AppLogger
@@ -61,7 +62,6 @@ public class ItemServiceController {
     }
 
     @GetMapping("/allItems")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<List<Item>> findAllItemsById() {
         try {
             logger.info("retrieving items for set of item codes ");

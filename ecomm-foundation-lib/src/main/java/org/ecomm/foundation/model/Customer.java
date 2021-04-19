@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 @NoArgsConstructor
+@Getter
+@Setter
 @ToString
 @EqualsAndHashCode
 @Entity
@@ -17,8 +19,6 @@ import java.util.Objects;
 public class Customer {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(generator="customer.customer_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "customer.customer_id_seq", sequenceName = "customer.customer_id_seq", allocationSize = 1)
     private int id;
 
     @Basic
@@ -57,8 +57,8 @@ public class Customer {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "CustomerAddress", schema = "customer",
-      joinColumns = @JoinColumn(name = "customer_id"),
-      inverseJoinColumns = @JoinColumn(name = "address_id")
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
     )
     private List<Address> addresses = new ArrayList<>();
 
@@ -149,6 +149,22 @@ public class Customer {
 
     public Customer setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+        return this;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "customerpayment", schema = "customer",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "payment_id")
+    )
+    public List<Payment> customerPayments;
+
+    public List<Payment> getCustomerPayments() {
+        return customerPayments;
+    }
+
+    public Customer setCustomerPayments(List<Payment> customerPayments) {
+        this.customerPayments = customerPayments;
         return this;
     }
 }
